@@ -1,7 +1,10 @@
 import { Router } from "express";
+import { authenticationMiddleware } from "../middlewares/authentication";
 import { Message } from "../models/message";
 
 const router = Router()
+
+router.use(authenticationMiddleware)
 
 router.get('/message', async (req, res) => {
   const messages = await Message.find({})

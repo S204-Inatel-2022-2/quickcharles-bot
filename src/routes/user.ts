@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { createUserToken } from "../controllers/usersController";
 import { User } from "../models/user";
 
 const router = Router()
@@ -10,7 +11,7 @@ router.get('/user', async (req, res) => {
 
 router.post('/user', async (req, res) => {
   const { name } = req.body
-  const token = '123-asd-456-zxc'
+  const token = createUserToken({ name })
 
   const user = User.build({ token, name })
   
