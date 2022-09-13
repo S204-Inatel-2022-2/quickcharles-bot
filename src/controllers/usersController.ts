@@ -17,7 +17,7 @@ const parseToken = (token: string) => {
 
 const verifyUserToken = (token: string) => {
   try {
-    return jwt.verify(parseToken(token), secretKey)
+    return jwt.verify(token, secretKey)
   } catch(err) {
     if(err instanceof JsonWebTokenError)
       return false
@@ -28,5 +28,5 @@ const verifyUserToken = (token: string) => {
 export {
   createUserToken,
   verifyUserToken,
-  IUserTokenPayload
+  parseToken
 }
