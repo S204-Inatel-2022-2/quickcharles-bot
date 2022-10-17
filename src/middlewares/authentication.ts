@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { verifyUserToken, parseToken } from "../controllers/usersController";
+import { verifyUserToken, parseToken } from "../controllers/authenticationController";
 import { User } from "../models/user";
 
 const authenticationMiddleware = async (req: Request, res: Response, next: NextFunction) => {

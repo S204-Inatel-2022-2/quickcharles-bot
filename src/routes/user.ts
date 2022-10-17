@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { Types } from "mongoose";
-import { createUserToken } from "../controllers/usersController";
+import { createUserToken } from "../controllers/authenticationController";
 import { authenticationMiddleware } from "../middlewares/authentication";
 import { User } from "../models/user";
 
