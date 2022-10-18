@@ -1,7 +1,6 @@
 import { Integrations } from "../integrations/integrations"
 import { UserDoc } from "../models/user"
 
-
 class UserController {
   usersMap: Map<string, Integrations>
 
@@ -9,19 +8,37 @@ class UserController {
     this.usersMap = new Map<string, Integrations>()
   }
 
-  createUser(token: string, name: string) {
-    this.usersMap.set(token, new Integrations())
+  createUser(userId: string, name: string) {
+    this.usersMap.set(userId, new Integrations(userId))
   }
 
-  getUserIntegrations(token: string): Integrations {
-    return this.usersMap.get(token)
+  getUserIntegrations(userId: string): Integrations {
+    return this.usersMap.get(userId)
   }
 
   async initUsers(users: UserDoc[]) {
-
-    // todo: subir ja com as integrações cadastradas
     for(const user of users) {
-      this.usersMap.set(user.token, new Integrations())
+      this.usersMap.set(user._id.toString(), new Integrations(user._id))
+      if(user.discord) {
+        // bizonho
+        this.getUserIntegrations(user._id.toString()).startDiscordIntegration(user.discord.token).then(() => {
+          console.log('TEMPORARIO! subiu o discord pro ' + user._id.toString())
+        })
+      }
     }
   }
 }
+
+const userControllerSingleton = (function() {
+  let instance: UserController
+  return {
+    getInstance: function(): UserController {
+      if(!instance)
+        instance = new UserController()
+      return instance
+    }
+  }
+})();
+
+
+export { userControllerSingleton }

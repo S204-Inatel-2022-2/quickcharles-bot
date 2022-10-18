@@ -1,44 +1,46 @@
-import { CacheType, ChatInputCommandInteraction, Client, GatewayIntentBits, Interaction } from 'discord.js'
+import { Client, GatewayIntentBits } from 'discord.js'
+import { MessageEngine } from './messageEngine'
 
-class DiscordIntegration implements IIntegration {
+class DiscordIntegration /* implements IIntegration */ {
   #token: string
   #client: Client
   #isLogged: boolean
+  #engine: MessageEngine
 
-  constructor(token: string) {
+  constructor(token: string, engine: MessageEngine) {
     this.#token = token
+    this.#engine = engine
     this.#isLogged = false
-    this.#client = new Client({ intents: [GatewayIntentBits.Guilds] })
+    this.#client = new Client({ intents: [
+      GatewayIntentBits.Guilds,
+      GatewayIntentBits.GuildMessages,
+      GatewayIntentBits.DirectMessages,
+      GatewayIntentBits.MessageContent
+    ] })
   }
 
-  async login() {
-    const loginStatus = await this.#client.login(this.#token)
-    // todo: testar retorno do login
-    this.#isLogged = true
+  async login(): Promise<void> {
+    await this.#client.login(this.#token)
+    this.#client.on('ready', () => {
+      this.#isLogged = true
+    });
+  }
+  
+  addListners() {
+    this.addMessageCreateEvent()
   }
 
-  onTextMessage(cb: (text: string, sendMessage: (text: string) => Promise<boolean>) => void): void {
-    this.#client.on('interactionCreate', (interaction) => {
-      if(!interaction.isChatInputCommand()) {
-        return
+  addMessageCreateEvent(): void {
+    this.#client.on('messageCreate', async (message) => {
+      const incomingText = message.content
+
+      const payload = await this.#engine.getPayloadFromKeyord(incomingText)
+      if(payload) {
+        message.reply({
+          content: payload
+        })
       }
-
-      const incomingText = interaction.commandName
-
-      cb(incomingText, this.#getSendMessageMethod(interaction))
     })
-  }
-
-  #getSendMessageMethod(interaction: ChatInputCommandInteraction): (text: string) => Promise<boolean> {
-    return async (text: string) => {
-      if(this.#isLogged) {
-        const replyStatus = await interaction.reply(text)
-        // todo: testar retorno do reply
-        return Promise.resolve(true)
-      } else {
-        return Promise.reject('not logged in')
-      }
-    }
   }
 }
 

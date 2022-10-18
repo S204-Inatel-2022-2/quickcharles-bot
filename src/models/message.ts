@@ -37,4 +37,4 @@ messageSchema.statics.build = (attr: IMessage) => {
 
 const Message = mongoose.model<MessageDoc, MessageModelInterface>('Message', messageSchema)
 
-export { Message }
+export { Message, MessageDoc }
