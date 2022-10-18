@@ -1,6 +1,6 @@
 import { Message } from "../models/message";
 
-class MessageEngine {
+class MessageController {
   #userId: string
 
   constructor(userId: string) {
@@ -17,4 +17,4 @@ class MessageEngine {
   }
 }
 
-export { MessageEngine }
+export { MessageController }

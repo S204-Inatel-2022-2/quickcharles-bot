@@ -1,13 +1,13 @@
 import { Client, GatewayIntentBits } from 'discord.js'
-import { MessageEngine } from './messageEngine'
+import { MessageController } from '../controllers/messageController'
 
 class DiscordIntegration /* implements IIntegration */ {
   #token: string
   #client: Client
   #isLogged: boolean
-  #engine: MessageEngine
+  #engine: MessageController
 
-  constructor(token: string, engine: MessageEngine) {
+  constructor(token: string, engine: MessageController) {
     this.#token = token
     this.#engine = engine
     this.#isLogged = false

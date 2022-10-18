@@ -20,10 +20,12 @@ class UserController {
     for(const user of users) {
       this.usersMap.set(user._id.toString(), new Integrations(user._id))
       if(user.discord) {
+
         // bizonho
         this.getUserIntegrations(user._id.toString()).startDiscordIntegration(user.discord.token).then(() => {
           console.log('TEMPORARIO! subiu o discord pro ' + user._id.toString())
         })
+
       }
     }
   }
@@ -39,6 +41,5 @@ const userControllerSingleton = (function() {
     }
   }
 })();
-
 
 export { userControllerSingleton }

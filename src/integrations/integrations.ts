@@ -1,5 +1,5 @@
 import { DiscordIntegration } from "./discordIntegration"
-import { MessageEngine } from "./messageEngine"
+import { MessageController } from "../controllers/messageController"
 
 class Integrations {
   #userId: string
@@ -11,7 +11,7 @@ class Integrations {
 
   async startDiscordIntegration(token: string): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      this.discord = new DiscordIntegration(token, new MessageEngine(this.#userId))
+      this.discord = new DiscordIntegration(token, new MessageController(this.#userId))
       
       this.discord.login()
         .then(() => {
