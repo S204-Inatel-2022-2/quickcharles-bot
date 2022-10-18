@@ -1,11 +1,13 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 
 interface IMessage {
+  _userId: Types.ObjectId
   keyword: string
   payload: string
 }
 
 interface MessageDoc extends mongoose.Document {
+  _userId: Types.ObjectId
   keyword: string
   payload: string
 }
@@ -15,6 +17,10 @@ interface MessageModelInterface extends mongoose.Model<MessageDoc> {
 }
 
 const messageSchema = new mongoose.Schema({
+  _userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true
+  },
   keyword: {
     type: String,
     required: true
@@ -31,4 +37,4 @@ messageSchema.statics.build = (attr: IMessage) => {
 
 const Message = mongoose.model<MessageDoc, MessageModelInterface>('Message', messageSchema)
 
-export { Message }
+export { Message, MessageDoc }
