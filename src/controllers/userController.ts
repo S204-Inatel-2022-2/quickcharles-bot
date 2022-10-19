@@ -8,7 +8,7 @@ class UserController {
     this.usersMap = new Map<string, Integrations>()
   }
 
-  createUser(userId: string, name: string) {
+  addUser(userId: string) {
     this.usersMap.set(userId, new Integrations(userId))
   }
 

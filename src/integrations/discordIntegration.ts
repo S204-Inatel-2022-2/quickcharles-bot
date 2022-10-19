@@ -33,8 +33,12 @@ class DiscordIntegration /* implements IIntegration */ {
   addMessageCreateEvent(): void {
     this.#client.on('messageCreate', async (message) => {
       const incomingText = message.content
-
-      const payload = await this.#engine.getPayloadFromKeyord(incomingText)
+      let payload = null
+      try {
+        payload = await this.#engine.getPayloadFromKeyord(incomingText)
+      } catch(err) {
+        console.error('[DiscordIntegration][getPayloadFromKeyord] - error:', err)
+      }
       if(payload) {
         message.reply({
           content: payload

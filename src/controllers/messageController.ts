@@ -1,4 +1,5 @@
 import { Message } from "../models/message";
+import { parseDatabaseError } from "../utils/databaseUtils";
 
 class MessageController {
   #userId: string

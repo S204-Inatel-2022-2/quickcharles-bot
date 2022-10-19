@@ -12,12 +12,17 @@ const API_PORT = 3000
 
 mongoose.connect('mongodb://localhost:27017/quickcharles', {}, async () => {
   console.log(`Conectado no mongo.`)
-  const users = await User.find({})
-  const userController = userControllerSingleton.getInstance()
-  userController.initUsers(users)
-    .then(() => {
-      console.log('Todos os usuarios registrados!')
-      console.table(userController.usersMap)
+  User.find({}).exec()
+    .then(users => {
+      const userController = userControllerSingleton.getInstance()
+      userController.initUsers(users)
+        .then(() => {
+          console.log('Todos os usuarios registrados!')
+          console.table(userController.usersMap)
+        })
+    })
+    .catch(err => {
+      console.error('[app.ts][initUsers] - err: ', err.message)
     })
 })
 
