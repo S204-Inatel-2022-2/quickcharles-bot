@@ -1,19 +1,25 @@
-import mongoose from "mongoose";
+import mongoose, { mongo } from "mongoose";
 
 type DiscordIntegrationInfo = {
   token: string
+}
+
+type WhatsappIntegrationInfo = {
+  session: any
 }
 
 interface IUser {
   token: string
   name: string
   discord?: DiscordIntegrationInfo
+  whatsapp?: WhatsappIntegrationInfo
 }
 
 interface UserDoc extends mongoose.Document {
   token: string
   name: string
   discord?: DiscordIntegrationInfo
+  whatsapp?: WhatsappIntegrationInfo
 }
 
 interface UserModelInterface extends mongoose.Model<UserDoc> {
@@ -27,6 +33,13 @@ const discordSchema = new mongoose.Schema({
   }
 })
 
+const whatsappSchema = new mongoose.Schema({
+  session: {
+    type: {},
+    required: true
+  }
+})
+
 const userSchema = new mongoose.Schema({
   token: {
     type: String,
@@ -36,7 +49,8 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  discord: discordSchema
+  discord: discordSchema,
+  whatsapp: whatsappSchema
 })
 
 

@@ -6,6 +6,7 @@ import { User } from './models/user';
 import { discordRouter } from './routes/discord';
 import { messageRouter } from './routes/message';
 import { userRouter } from './routes/user';
+import { whatsappRouter } from './routes/whatsapp';
 
 const app = express()
 const API_PORT = 3000
@@ -30,6 +31,7 @@ app.use(bodyParser.json())
 app.use(userRouter)
 app.use(messageRouter)
 app.use(discordRouter)
+app.use(whatsappRouter)
 
 app.listen(API_PORT, () => {
   console.log(`Escutando na portera: ${API_PORT}`)
