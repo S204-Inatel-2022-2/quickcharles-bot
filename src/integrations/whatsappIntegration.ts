@@ -54,8 +54,8 @@ class WhatsappIntegration /* implements IIntegration */ {
   }
 
   #getMessage(message: proto.IWebMessageInfo) {
-    if(!message.key.fromMe) {
-      if(message.message.conversation) {
+    if(!message.key?.fromMe) {
+      if(message.message?.conversation) {
         return message.message.conversation
       }
     }
