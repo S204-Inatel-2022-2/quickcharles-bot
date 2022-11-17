@@ -9,7 +9,7 @@ import { userRouter } from './routes/user';
 import { whatsappRouter } from './routes/whatsapp';
 
 const app = express()
-const API_PORT = process.env.API_PORT || 3000
+const API_PORT = process.env.PORT || 3000
 const MONGO_URI = process.env.MONGO_URL || 'mongodb://localhost:27017/quickcharles'
 
 mongoose.connect(MONGO_URI, {}, async () => {
