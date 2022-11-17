@@ -33,6 +33,10 @@ app.use(messageRouter)
 app.use(discordRouter)
 app.use(whatsappRouter)
 
+app.get('/', (_, res) => {
+  return res.status(200).json('quickchales-bot :)')
+})
+
 app.listen(API_PORT, () => {
   console.log(`Escutando na portera: ${API_PORT}`)
 })
