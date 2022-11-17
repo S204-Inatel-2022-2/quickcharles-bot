@@ -9,9 +9,10 @@ import { userRouter } from './routes/user';
 import { whatsappRouter } from './routes/whatsapp';
 
 const app = express()
-const API_PORT = 3000
+const API_PORT = process.env.API_PORT || 3000
+const MONGO_URI = process.env.MONGO_URL || 'mongodb://localhost:27017/quickcharles'
 
-mongoose.connect('mongodb://localhost:27017/quickcharles', {}, async () => {
+mongoose.connect(MONGO_URI, {}, async () => {
   console.log(`Conectado no mongo.`)
   User.find({}).exec()
     .then(users => {
