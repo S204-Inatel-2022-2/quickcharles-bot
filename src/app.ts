@@ -33,6 +33,8 @@ app.use(messageRouter)
 app.use(discordRouter)
 app.use(whatsappRouter)
 
+console.log(process.env)
+
 app.get('/', (_, res) => {
   return res.status(200).json('quickchales-bot :)')
 })
