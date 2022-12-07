@@ -26,7 +26,7 @@ const useUserDocAuthState = async (userId: string) => {
         whatsapp: {
           session: keyedData
         }
-      }).exec()
+      }, { new: true }).exec()
       return true
     } catch(_) {
       return false // Isso aqui ta completamente errado!
@@ -62,7 +62,7 @@ const useUserDocAuthState = async (userId: string) => {
         whatsapp: {
           session: keyedData
         }
-      }).exec()
+      }, { new: true }).exec()
       return true
     } catch(_) {
       return false // Isso aqui ta completamente errado!

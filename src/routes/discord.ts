@@ -3,7 +3,7 @@ import { Types } from "mongoose";
 import { userControllerSingleton } from "../controllers/userController";
 import { authenticationMiddleware } from "../middlewares/authentication";
 import { User } from "../models/user";
-import { parseDatabaseError } from "../utils/databaseUtils";
+import { filterDatabaseData, parseDatabaseError } from "../utils/databaseUtils";
 
 const router = Router()
 
@@ -12,7 +12,7 @@ router.get('/discord', authenticationMiddleware, async (req, res) => {
   User.findOne({ _id: userObjectId }).exec()
     .then(user => {
       if(user.discord) {
-        return res.status(200).send(user.discord)
+        return res.status(200).send(filterDatabaseData(user.discord))
       } else {
         return res.status(400).send({ error: 'discord not integrated for this user' })
       }
@@ -33,9 +33,9 @@ const discordPostPut = async (req: Request, res: Response) => {
       discord: {
         token: token
       }
-    }).exec()
+    }, { new: true }).exec()
       .then(user => {
-        return res.status(200).send(user)
+        return res.status(200).send(filterDatabaseData(user.discord))
       })
       .catch(err => {
         const { statusCode, responseJson } = parseDatabaseError(err)
@@ -53,9 +53,9 @@ router.delete('/discord', authenticationMiddleware, async (req: Request, res: Re
   
   User.findOneAndUpdate({ _id: userObjectId }, {
     discord: null
-  }).exec()
+  }, { new: true }).exec()
     .then(user => {
-      return res.status(200).send(user)
+      return res.status(200).send({ success: true })
     })
     .catch(err => {
       const { statusCode, responseJson } = parseDatabaseError(err)

@@ -4,7 +4,7 @@ import { createUserToken } from "../controllers/authenticationController";
 import { userControllerSingleton } from "../controllers/userController";
 import { authenticationMiddleware } from "../middlewares/authentication";
 import { User } from "../models/user";
-import { parseDatabaseError } from "../utils/databaseUtils";
+import { filterDatabaseData, parseDatabaseError } from "../utils/databaseUtils";
 
 const router = Router()
 
@@ -12,7 +12,7 @@ router.get('/user', authenticationMiddleware, async (_, res) => {
   const userObjectId: Types.ObjectId = res.locals.userObjectId
   User.findOne({ _id: userObjectId })
     .then(user => {
-      return res.status(200).send(user)
+      return res.status(200).send(filterDatabaseData(user))
     })
     .catch(err => {
       const { statusCode, responseJson } = parseDatabaseError(err)
@@ -31,7 +31,7 @@ router.post('/user', async (req, res) => {
       const userContoller = userControllerSingleton.getInstance()
       try {
         userContoller.addUser(user._id.toString())
-        return res.status(200).send(user)
+        return res.status(200).send(filterDatabaseData(user))
       } catch(err) {
         return res.status(500).send({ error: 'cant add user?' })
       }
@@ -50,10 +50,9 @@ router.put('/user', authenticationMiddleware, (req, res) => {
   if(name) {
     User.findOneAndUpdate({ _id: userObjectId }, {
       name: name
-    }).exec()
+    }, { new: true }).exec()
       .then(user => {
-        // retorna user NAO atualizado
-        return res.status(200).send(user)
+        return res.status(200).send(filterDatabaseData(user))
       })
       .catch(err => {
         const { statusCode, responseJson } = parseDatabaseError(err)

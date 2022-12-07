@@ -2,7 +2,7 @@ import { Router } from "express";
 import { Types } from "mongoose";
 import { authenticationMiddleware } from "../middlewares/authentication";
 import { Message } from "../models/message";
-import { parseDatabaseError } from "../utils/databaseUtils";
+import { filterDatabaseData, parseDatabaseError } from "../utils/databaseUtils";
 
 const router = Router()
 
@@ -14,7 +14,7 @@ router.get('/message', authenticationMiddleware, async (req, res) => {
   if(id) {
     Message.findOne({ _userId: userObjectId, _id: id }).exec()
     .then(messages => {
-      return res.status(200).send(messages)
+      return res.status(200).send(filterDatabaseData(messages))
     })
     .catch(err => {
       const { statusCode, responseJson } = parseDatabaseError(err)
@@ -23,7 +23,7 @@ router.get('/message', authenticationMiddleware, async (req, res) => {
   } else {
     Message.find({ _userId: userObjectId }).exec()
       .then(messages => {
-        return res.status(200).send(messages)
+        return res.status(200).send(filterDatabaseData(messages))
       })
       .catch(err => {
         const { statusCode, responseJson } = parseDatabaseError(err)
@@ -40,7 +40,7 @@ router.post('/message', authenticationMiddleware, (req, res) => {
     const message = Message.build({ _userId: userObjectId, keyword, payload })
     
     message.save().then(() => {
-      return res.status(200).send(message)
+      return res.status(200).send(filterDatabaseData(message))
     }).catch(err => {
       return res.status(400).send({ error: err })
     })
@@ -58,9 +58,9 @@ router.put('/message', authenticationMiddleware, (req, res) => {
     Message.findOneAndUpdate({ _userId: userObjectId, _id: id }, {
       keyword: keyword ? keyword : undefined,
       payload: payload ? payload : undefined
-    }).exec()
+    }, { new: true }).exec()
       .then(message => {
-        return res.status(200).send(message)
+        return res.status(200).send(filterDatabaseData(message))
       })
       .catch(err => {
         const { statusCode, responseJson } = parseDatabaseError(err)

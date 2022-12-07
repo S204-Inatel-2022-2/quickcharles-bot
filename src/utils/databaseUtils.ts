@@ -27,6 +27,19 @@ const parseDatabaseError = (err: MongooseError): { statusCode: number, responseJ
   }
 }
 
+const filterDatabaseData = (data) => {
+  if(Array.isArray(data)) {
+    return data.map(d => {
+      d.__v = undefined
+      return d
+    })
+  } else {
+    data.__v = undefined
+    return data
+  }
+}
+
 export { 
-  parseDatabaseError
+  parseDatabaseError,
+  filterDatabaseData
 }
